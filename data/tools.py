@@ -16,13 +16,16 @@ def rect_surf(size, color):
 
 # button creator
 class Button():
-    def __init__(self, text, width, height, pos, elevation, font):
+    def __init__(self, text, width, height, pos, elevation, font, borderradius = 12):
         # core
         self.pressed = False
         self.elevation = elevation
         self.dynamic_elevation = elevation
         self.original_y_pos = pos[1]
         self.clicked = False
+
+        # sound
+        self.hover_played = False
 
         # for animation
         self.last = pygame.time.get_ticks()
@@ -31,6 +34,7 @@ class Button():
         # upper rect
         self.upper_rect = pygame.Rect(pos, (width, height))
         self.upper_color = '#475F77'
+        self.borderradius = borderradius
 
         # bottom rect
         self.bottom_rect = pygame.Rect(pos, (width, elevation))
@@ -51,17 +55,24 @@ class Button():
         self.bottom_rect.height = self.upper_rect.height + self.dynamic_elevation
 
         # rect draw
-        pygame.draw.rect(screen, self.bottom_color, self.bottom_rect, border_radius= 12)
-        pygame.draw.rect(screen, self.upper_color, self.upper_rect, border_radius= 12)
+        pygame.draw.rect(screen, self.bottom_color, self.bottom_rect, border_radius= self.borderradius)
+        pygame.draw.rect(screen, self.upper_color, self.upper_rect, border_radius= self.borderradius)
         screen.blit(self.text_surf, self.text_rect)
         self.check_click() # check if btn clicked
 
     # button click checker ---------------------------------------
     def check_click(self):
         mouse_pos = pygame.mouse.get_pos()
+        
 
         # if mouse hover
         if self.upper_rect.collidepoint(mouse_pos):
+            if not self.hover_played:
+                hover = pygame.mixer.Sound('./data/music/other/button-hover.wav')
+                hover.set_volume(0.1)
+                hover.play()
+                self.hover_played = True
+
             # change cursor to pointer
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
             # hover color
@@ -77,10 +88,14 @@ class Button():
                 if self.pressed == True:
                     self.pressed = False
                     self.clicked = True
+                    click = pygame.mixer.Sound('./data/music/other/button-click.wav')
+                    click.set_volume(0.1)
+                    click.play()
         else:
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
             self.upper_color = '#475F77'
             self.clicked = False
+            self.hover_played = False
 
     # button animation screen change delay -(possibilites for better screen animations)
     def animated(self):

@@ -4,7 +4,7 @@ from pygame.locals import *
 from data.game import Game
 from data.walls import Wall
 from data.player import Player
-from data.screens.menu import menu
+from data.screens.menu.menu import menu
 from data.tools import draw_rect_alpha, rect_surf
 from data.screens.gameover import gameover
 

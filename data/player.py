@@ -61,7 +61,7 @@ class Player :
                 pygame.draw.rect(screen, color, (self.actual_pos, 600, 40, 40))
                 self.velocity = 1.0
         else:
-            print(f"({self.starting_pos}, {self.actual_pos}, {self.end_pos})")
+            # print(f"({self.starting_pos}, {self.actual_pos}, {self.end_pos})")
             if self.actual_pos > self.end_pos + 5:
                 self.actual_pos -= 2 + self.velocity
                 

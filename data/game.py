@@ -60,12 +60,12 @@ class Game:
         self.ingame = True
 
         # game speed vars --------------------
-        self.game_speed = 2
-        self.speed_incr = 0.002
+        self.game_speed = 3
+        self.speed_incr = 0.001
 
         # coloring ---------------------------
-        self.bg_color = (239, 239, 239)
-        self.walls_color = (29, 53, 87)
+        self.bg_color = "#2b2d42"
+        self.walls_color = "#e9eaec"
         self.player_color = (230, 57, 70)
 
         # clock setup

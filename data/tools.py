@@ -1,12 +1,12 @@
 import pygame
 
-# drawing transparent rect
+# drawing transparent rect ------------------------------------------------------------------------
 def draw_rect_alpha(surface, color, rect):
     shape_surf = pygame.Surface(pygame.Rect(rect).size, pygame.SRCALPHA)
     pygame.draw.rect(shape_surf, color, shape_surf.get_rect())
     surface.blit(shape_surf, rect)
 
-# small lightning blend on rects
+# small lightning blend on rects ------------------------------------------------------------------
 def rect_surf(size, color):
     surf = pygame.Surface((size * 2, size * 2))
     pygame.draw.rect(surf, color, (-6, -4, size, size))
@@ -14,7 +14,7 @@ def rect_surf(size, color):
     return surf
 
 
-# button creator
+# button creator -----------------------------------------------------------------------------------
 class Button():
     def __init__(self, text, width, height, pos, elevation, font, borderradius = 12):
         # core
@@ -67,14 +67,18 @@ class Button():
 
         # if mouse hover
         if self.upper_rect.collidepoint(mouse_pos):
+            # hover move and sound
             if not self.hover_played:
                 hover = pygame.mixer.Sound('./data/music/other/button-hover.wav')
                 hover.set_volume(0.1)
                 hover.play()
                 self.hover_played = True
 
-            # change cursor to pointer
-            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                self.dynamic_elevation -= 1 # hover move
+
+            # cursor change to pointer
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND) 
+
             # hover color
             self.upper_color = '#D74B4B'
 
@@ -83,9 +87,9 @@ class Button():
                 self.dynamic_elevation = 0
                 self.pressed = True
             else:
-                self.dynamic_elevation = self.elevation
                 # play animation once
                 if self.pressed == True:
+                    self.dynamic_elevation = self.elevation - 1
                     self.pressed = False
                     self.clicked = True
                     click = pygame.mixer.Sound('./data/music/other/button-click.wav')
@@ -96,6 +100,7 @@ class Button():
             self.upper_color = '#475F77'
             self.clicked = False
             self.hover_played = False
+            self.dynamic_elevation = self.elevation
 
     # button animation screen change delay -(possibilites for better screen animations)
     def animated(self):
@@ -104,3 +109,49 @@ class Button():
             if now - self.last >= self.cooldown:
                 self.last = now
                 return True # animation ended
+
+
+
+# multilines text rendering ----------------------------------------------------------------------------
+def renderMultiLine(text, x, y, fsize, screen, color, font):
+        lines = text.splitlines()
+        for i, l in enumerate(lines):
+            screen.blit(font.render(l, 0, color), (x, y + fsize*i))
+
+
+# animator ---------------------------------------------------------------------------------------------
+# sprites is an array with images
+# delay is a value in ticks between changing image
+class Animator():
+    def __init__(self, sprites, screen, x, y, delay = 0):
+        # initial vars
+        self.rect = (x, y)
+        self.delay = delay
+        self.screen = screen
+        self.sprites = sprites
+        self.last = pygame.time.get_ticks()
+        self.current_sprite = 1
+        self.sprites_num = len(sprites)
+
+        self.pressed = False
+
+    def animate(self):
+        # draw sprite  
+        self.screen.blit(self.sprites[self.current_sprite - 1], self.rect)
+
+        # for delay
+        now = pygame.time.get_ticks()
+
+        # change current sprite
+        if now - self.last >= self.delay:
+            self.last = now
+
+            if self.current_sprite == self.sprites_num:
+                self.current_sprite = 0
+            else:
+                self.current_sprite += 1
+
+
+        
+    
+

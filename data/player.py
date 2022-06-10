@@ -40,7 +40,7 @@ class Player :
         
         # check if player will move right or left (right --> self.front = True)
         if self.front:
-            print(f"({self.starting_pos}, {self.actual_pos}, {self.end_pos})")
+            # print(f"({self.starting_pos}, {self.actual_pos}, {self.end_pos})")
             if self.actual_pos < self.end_pos - 5:
                 self.actual_pos += 4 + self.velocity
                 
@@ -66,11 +66,11 @@ class Player :
                 self.actual_pos -= 2 + self.velocity
                 
                 # animation backwards --------------------------------------------------------------
-                if self.actual_pos > (self.actual_pos //2) - (self.end_pos) and self.velocity <= 6:
-                    self.velocity += 1.5
+                if self.actual_pos > (self.actual_pos //2) - (self.end_pos) and self.velocity <= 10:
+                    self.velocity += 2.5
                 elif self.velocity >= 1.0:
-                    self.velocity -= 1.5
-            
+                    self.velocity -= 2.5
+                
                 pygame.draw.rect(screen, color, (self.actual_pos, 600, 40, 40))
             else:
                 # setup variables for next move

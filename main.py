@@ -5,7 +5,7 @@ from data.game import Game
 from data.walls import Wall
 from data.player import Player
 from data.screens.menu.menu import menu
-from data.tools import draw_rect_alpha, rect_surf
+from data.tools import draw_rect_alpha, rect_surf, Animator
 from data.screens.gameover import gameover
 
 # TODO clean up code and ??move inGame function to another file?
@@ -39,6 +39,36 @@ def inGame():
     global running
     school_img = pygame.image.load(f"./data/img/school.jpg").convert() # bg image for characters
 
+    # key sprites
+    key01_state_1 = pygame.image.load(f"./data/img/keys/01-state-1.png").convert_alpha()
+    key01_state_1 = pygame.transform.scale(key01_state_1, (120, 120))
+    key01_state_2 = pygame.image.load(f"./data/img/keys/01-state-2.png").convert_alpha()
+    key01_state_2 = pygame.transform.scale(key01_state_2, (120, 120))
+    key_one_sprites = [key01_state_1, 
+                       key01_state_2
+    ]
+
+    key02_state_1 = pygame.image.load(f"./data/img/keys/02-state-1.png").convert_alpha()
+    key02_state_1 = pygame.transform.scale(key02_state_1, (120, 120))
+    key02_state_2 = pygame.image.load(f"./data/img/keys/02-state-2.png").convert_alpha()
+    key02_state_2 = pygame.transform.scale(key02_state_2, (120, 120))
+    key_two_sprites = [key02_state_1, 
+                       key02_state_2
+    ]
+
+    key03_state_1 = pygame.image.load(f"./data/img/keys/03-state-1.png").convert_alpha()
+    key03_state_1 = pygame.transform.scale(key03_state_1, (120, 120))
+    key03_state_2 = pygame.image.load(f"./data/img/keys/03-state-2.png").convert_alpha()
+    key03_state_2 = pygame.transform.scale(key03_state_2, (120, 120))
+    key_three_sprites = [key03_state_1, 
+                         key03_state_2
+    ]
+
+    key01 = Animator(key_one_sprites, game.screen, 280, 520, 5)
+    key02 = Animator(key_two_sprites, game.screen, 150, 220, 5)
+    key03 = Animator(key_three_sprites, game.screen, 225, 220, 5)
+
+
     # in game loop
     while game.ingame:
 
@@ -53,10 +83,10 @@ def inGame():
                 
         # background setup
         game.screen.fill(game.bg_color) # game background
-        draw_rect_alpha(game.screen, (168, 218, 220, 127), (0, 600, 240, 40)) # player movement background
+        draw_rect_alpha(game.screen, (34, 36, 53, 127), (0, 595, 240, 5)) # player movement background
 
         # center character on bg img
-        if wall_1.pos >= 679 or wall_2.pos >= 679:
+        if wall_1.pos >= 680 or wall_2.pos >= 680:
             game.score += 1 # adding score after every wall
             game.reloadImage() # change character image
 
@@ -65,7 +95,10 @@ def inGame():
          # center character image
         game.screen.blit(game.bg_image, (480 - (game.bg_size[0] // 2), 320 - (game.bg_size[1] // 2)))
 
-        
+        if key01.pressed:
+            key01.animate()
+
+
         # events
         for event in pygame.event.get():
             # quit
@@ -77,6 +110,7 @@ def inGame():
             if event.type == KEYDOWN:
                 if event.key == K_1:
                     player.updatePos(1)
+                    key01.pressed = True
                 if event.key == K_2:
                     player.updatePos(2)
                 if event.key == K_3:
@@ -86,8 +120,9 @@ def inGame():
         player.draw(game.screen, game.player_color, (40*(player.pos-1), 600, 40, 40))
         
         # current score text
-        score_text = font.render(f'SCORE: {str(game.score)}', True, (69, 123, 157))
-        game.screen.blit(score_text, (100, 30))
+        score_text = font.render(f'SCORE: {str(game.score)}', True, "#e9eaec")
+        text_rect = score_text.get_rect(center=(120, 50))
+        game.screen.blit(score_text, text_rect)
 
 
         # walls draw

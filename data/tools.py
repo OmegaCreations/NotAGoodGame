@@ -135,21 +135,28 @@ class Animator():
 
         self.pressed = False
 
-    def animate(self):
-        # draw sprite  
-        self.screen.blit(self.sprites[self.current_sprite - 1], self.rect)
-
-        # for delay
-        now = pygame.time.get_ticks()
-
-        # change current sprite
-        if now - self.last >= self.delay:
-            self.last = now
-
+    def animate(self, delayed, induced):
+        if induced:
             if self.current_sprite == self.sprites_num:
-                self.current_sprite = 0
+                self.current_sprite = 1
             else:
                 self.current_sprite += 1
+            print(f"changed {self.current_sprite}")
+        elif delayed:
+            # for delay
+            now = pygame.time.get_ticks()
+
+            # change current sprite
+            if now - self.last >= self.delay:
+                self.last = now
+
+                if self.current_sprite == self.sprites_num:
+                    self.current_sprite = 0
+                else:
+                    self.current_sprite += 1
+
+        # draw sprite
+        self.screen.blit(self.sprites[self.current_sprite - 1], self.rect)
 
 
         

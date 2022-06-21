@@ -65,8 +65,8 @@ def inGame():
     ]
 
     key01 = Animator(key_one_sprites, game.screen, 280, 520, 5)
-    key02 = Animator(key_two_sprites, game.screen, 150, 220, 5)
-    key03 = Animator(key_three_sprites, game.screen, 225, 220, 5)
+    key02 = Animator(key_two_sprites, game.screen, 355, 520, 5)
+    key03 = Animator(key_three_sprites, game.screen, 430, 520, 5)
 
 
     # in game loop
@@ -95,9 +95,6 @@ def inGame():
          # center character image
         game.screen.blit(game.bg_image, (480 - (game.bg_size[0] // 2), 320 - (game.bg_size[1] // 2)))
 
-        if key01.pressed:
-            key01.animate()
-
 
         # events
         for event in pygame.event.get():
@@ -110,11 +107,25 @@ def inGame():
             if event.type == KEYDOWN:
                 if event.key == K_1:
                     player.updatePos(1)
-                    key01.pressed = True
+                    key01.animate(False, True)
                 if event.key == K_2:
                     player.updatePos(2)
+                    key02.animate(False, True)
                 if event.key == K_3:
                     player.updatePos(3)
+                    key03.animate(False, True)
+            elif event.type == KEYUP:
+                if event.key == K_1:
+                    key01.animate(False, True)
+                if event.key == K_2:
+                    key02.animate(False, True)
+                if event.key == K_3:
+                    key03.animate(False, True)
+        
+        # keys animation
+        key01.animate(False, False)
+        key02.animate(False, False)
+        key03.animate(False, False)
         
         # player draw
         player.draw(game.screen, game.player_color, (40*(player.pos-1), 600, 40, 40))
